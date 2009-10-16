@@ -6,13 +6,9 @@ class Application
   
   class MyView < NSView
     attr_reader :slides
-    def acceptsFirstResponder
-      true
-    end
 
-    def acceptsFirstMouse(event)
-      true
-    end    
+    def acceptsFirstResponder; true; end
+    def acceptsFirstMouse(*); true; end    
     
     def words=(words)
       self.slides = words.map do |word|
@@ -31,11 +27,7 @@ class Application
       characters = event.characters      
       if characters.length == 1 && !event.isARepeat
         character = characters.characterAtIndex(0)
-        if character == NSLeftArrowFunctionKey
-          on_previous_slide
-        else
-          on_next_slide
-        end
+        character == NSLeftArrowFunctionKey ? on_previous_slide : on_next_slide
       end
     end
 
@@ -53,9 +45,9 @@ class Application
         @slides[@current_slide].opacity = 1.0
       end
     
-      #FIXME: broken - need to reset position
+      #FIXME: broken - need to reset scaling factor
       def on_previous_slide
-        return if @current_slide == 0
+        return if on_first_slide?
         slide = @slides[@current_slide]
         slide.opacity = 0.0
         @current_slide -= 1
@@ -91,6 +83,10 @@ class Application
       def text_starting_position
         @text_starting_position ||= [(screen_size.width)/2, 100]
       end
+      
+      def on_first_slide?
+        @current_slide == 0
+      end
   end
 
   attr_reader :words, :win
@@ -107,8 +103,7 @@ class Application
         enable_main_and_key!
         setup_view!
         win.will_close { exit }
-        win.level = CGShieldingWindowLevel()
-        win.makeKeyAndOrderFront(nil)
+        go_full_screen!
       end
     end
   end
@@ -130,6 +125,11 @@ class Application
       def win.canBecomeKeyWindow
         true
       end
+    end
+    
+    def go_full_screen!
+      win.level = CGShieldingWindowLevel()
+      win.makeKeyAndOrderFront(nil)
     end
 end
 
