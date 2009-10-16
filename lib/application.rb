@@ -6,9 +6,8 @@ class Application
   
   class MyView < NSView
     attr_reader :slides
-    def initialize()
-      
-    end    
+
+   
     def acceptsFirstResponder
       true
     end
@@ -17,12 +16,6 @@ class Application
       true
     end    
 
-    def mouseDown(event)
-      #@on_next_slide.call
-    end
-
-    def mouseUp(event)
-    end
     
     def keyDown(event)
       characters = event.characters      
@@ -36,9 +29,6 @@ class Application
       end
     end
 
-    def keyUp(event)
-    end
-    
     def on_next_slide(&block)
       @on_next_slide = block
     end
@@ -56,9 +46,9 @@ class Application
 
   
   def start
-    application :name => "Sheeooot" do |app|
+    application :name => "Shaikatah" do |app|
       app.delegate = self
-      window frame: NSScreen.mainScreen.frame, title: "Prez", styleMask:NSBorderlessWindowMask, defer:false, view: :nolayout do |win|
+      window frame: NSScreen.mainScreen.frame, title: "Shaikatah", styleMask:NSBorderlessWindowMask, defer:false, view: :nolayout do |win|
         @win = win
         def win.canBecomeMainWindow
           true
@@ -66,10 +56,7 @@ class Application
         def win.canBecomeKeyWindow
           true
         end
-        win.view = MyView.new
-        win.view.wantsLayer = true
-        
-        win.setInitialFirstResponder(win.view)
+        setup_view!
         
         slides = words.map do |word|
           text_layer_with(word)
@@ -110,28 +97,35 @@ class Application
     end
   end
 
-  def random_color_code
-    rand(100.0) * 0.01
-  end
+  private
+   
+    def setup_view!
+      win.view = MyView.new
+      win.view.wantsLayer = true
+      win.setInitialFirstResponder(win.view)
+    end
   
-  def text_layer_with(word)
-    screen_size = NSScreen.mainScreen.frame.size
-    headerTextLayer = CATextLayer.layer
-    headerTextLayer.name = "header"
-    headerTextLayer.setString  word
-    random_color_code
-    headerTextLayer.foregroundColor = CGColorCreateGenericRGB(random_color_code, random_color_code, random_color_code, 1.0)
-    headerTextLayer.style = {"font" => "BankGothic-Light","alignmentMode" => "center"}
-    headerTextLayer.fontSize = 104
-    headerTextLayer.wrapped = true
-    headerTextLayer.opacity = 0.0
-    headerTextLayer.frame = win.view.frame#????
-    headerTextLayer.contentsGravity = "center"
-    screen_size = NSScreen.mainScreen.frame.size
-    headerTextLayer.position = [(screen_size.width)/2, 100]
-    win.view.layer.addSublayer headerTextLayer
-    headerTextLayer
-  end
+    def random_color_code
+      rand(100.0) * 0.01
+    end
+  
+    def text_layer_with(word)
+      screen_size = NSScreen.mainScreen.frame.size
+      headerTextLayer = CATextLayer.layer
+      headerTextLayer.name = "header"
+      headerTextLayer.string = word
+      headerTextLayer.foregroundColor = CGColorCreateGenericRGB(random_color_code, random_color_code, random_color_code, 1.0)
+      headerTextLayer.style = {"font" => "BankGothic-Light","alignmentMode" => "center"}
+      headerTextLayer.fontSize = 104
+      headerTextLayer.wrapped = true
+      headerTextLayer.opacity = 0.0
+      headerTextLayer.frame = win.view.frame#????
+      headerTextLayer.contentsGravity = "center"
+      screen_size = NSScreen.mainScreen.frame.size
+      headerTextLayer.position = [(screen_size.width)/2, 100]
+      win.view.layer.addSublayer headerTextLayer
+      headerTextLayer
+    end
   
 end
 
