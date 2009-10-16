@@ -133,13 +133,10 @@ class Application
     end
 end
 
-def Takahashi!(*words)
-  Application.new(*words).start  
-end
 
-Takahashi!("The Takahashi Method", 
+Application.new("The Takahashi Method", 
           "One word or phrase per slide", 
           "Implemented in MacRuby", 
           "And Hot Cocoa", 
           "It's SO last year!!!"
-          )
+          ).start
