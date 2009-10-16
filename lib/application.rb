@@ -5,9 +5,6 @@ class Application
   include HotCocoa
   
   class MyView < NSView
-    attr_reader :slides
-
-   
     def acceptsFirstResponder
       true
     end
@@ -19,7 +16,7 @@ class Application
     
     def keyDown(event)
       characters = event.characters      
-      if characters.length == 1# && !event.isARepeat
+      if characters.length == 1 && !event.isARepeat
         character = characters.characterAtIndex(0)
         if character == NSLeftArrowFunctionKey
           @on_previous_slide.call
