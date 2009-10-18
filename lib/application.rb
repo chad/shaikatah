@@ -107,7 +107,18 @@ class Application
       end
     end
   end
-
+  
+  
+  def on_open(menu)
+    dialog = NSOpenPanel.openPanel
+    dialog.setCanChooseFiles true
+    dialog.setCanChooseDirectories false
+    if dialog.runModalForDirectory(nil, file: nil) == NSOKButton
+      presentation_file = dialog.filenames.first
+      
+    end
+  end
+  
   private
    
     def setup_view!
@@ -128,8 +139,8 @@ class Application
     end
     
     def go_full_screen!
-      win.level = CGShieldingWindowLevel()
-      win.makeKeyAndOrderFront(nil)
+      # win.level = CGShieldingWindowLevel()
+      # win.makeKeyAndOrderFront(nil)
     end
 end
 
