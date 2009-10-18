@@ -45,7 +45,6 @@ class Application
         @slides[@current_slide].opacity = 1.0
       end
     
-      #FIXME: broken - need to reset scaling factor
       def on_previous_slide
         return if on_first_slide?
         slide = @slides[@current_slide]
@@ -89,21 +88,16 @@ class Application
       end
   end
 
-  attr_reader :words, :win
-  def initialize(*words)
-    @words = words
-  end
-
+  attr_reader :win
   
   def start
     application :name => "Shaikatah" do |app|
       app.delegate = self
       window frame: NSScreen.mainScreen.frame, title: "Shaikatah", styleMask:NSBorderlessWindowMask, defer:false, view: :nolayout do |win|
         @win = win
+        win.view.setHidden true
         enable_main_and_key!
-        setup_view!
         win.will_close { exit }
-        go_full_screen!
       end
     end
   end
@@ -115,13 +109,15 @@ class Application
     dialog.setCanChooseDirectories false
     if dialog.runModalForDirectory(nil, file: nil) == NSOKButton
       presentation_file = dialog.filenames.first
-      
+      words = IO.read(presentation_file).split(/\n/)
+      setup_view_with! words
+      go_full_screen!
     end
   end
   
   private
    
-    def setup_view!
+    def setup_view_with!(words)
       win.view = MyView.new
       win.view.wantsLayer = true
       win.setInitialFirstResponder(win.view)
@@ -139,15 +135,10 @@ class Application
     end
     
     def go_full_screen!
-      # win.level = CGShieldingWindowLevel()
-      # win.makeKeyAndOrderFront(nil)
+      win.level = CGShieldingWindowLevel()
+      win.makeKeyAndOrderFront(nil)
     end
 end
 
 
-Application.new("The Takahashi Method", 
-          "One word or phrase per slide", 
-          "Implemented in MacRuby", 
-          "And Hot Cocoa", 
-          "It's SO last year!!!"
-          ).start
+Application.new.start

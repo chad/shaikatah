@@ -1,0 +1,6 @@
+Takashi Method!
+One word or phrase per slide
+Implemented in MacRuby
+And Hot Cocoa
+Some day it might render images
+Or maybe not
